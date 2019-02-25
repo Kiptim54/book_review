@@ -47,8 +47,8 @@ def search_books():
     title="Results | Book Review"
     name=request.form.get('book')
     # name="Krondor: The Betrayal"
-    sql="SELECT * FROM books WHERE title=:title;"
+    sql="SELECT * FROM books WHERE title ILIKE :title"
     print(" onestep")
-    results=db.execute(sql, {"title":name}).fetchall()
+    results=db.execute(sql, {"title":name})
     print(type(results))
     return render_template('results.html', title=title, results=results, search=name)
