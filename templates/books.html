@@ -1,0 +1,13 @@
+{% extends 'base.html'%}
+{% block content%}
+<h3>Books from database</h3>
+{% if books %}
+{%for book in books%}
+<ul>
+    <li>{{book.title}}-{{book.author}}</li>
+</ul>
+{%endfor%}
+{%else%}
+<h3>No books currently</h3>
+{% endif %}
+{% endblock%}

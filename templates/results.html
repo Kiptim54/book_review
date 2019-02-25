@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Results for the search {{search}}</h3>
+{% if results %}
+{%for result in results%}
+<ul>
+    <li>{{result.title}}~{{result.author}}</li>
+</ul>
+
+{% endfor%}
+{%else%}
+<h2>Nothing found</h2>
+{% endif %}
+{% endblock %}
