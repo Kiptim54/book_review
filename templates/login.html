@@ -4,11 +4,11 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <h2>Login</h2>
-            {% with messages = get_flashed_messages() %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             <ul class=flashes>
-                {% for message in messages %}
-                <li>{{ message }}</li>
+                {% for category,message in messages %}
+                <li class="{{category}}"> {{ message }}</li>
                 {% endfor %}
             </ul>
             {% endif %}
@@ -17,6 +17,7 @@
                 <input type="email" name="email" placeholder="Email" required class="form-control">
                 <input type="password" name="password" placeholder="password" required class="form-control">
                 <input type="submit" value="Login" class="btn">
+                <h5>No account? <a href="{{url_for('signup')}}">Sign Up</a></h5>
             </form>
         </div>
     </div>
