@@ -6,6 +6,7 @@ from flask_session import Session
 from sqlalchemy import create_engine
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import scoped_session, sessionmaker
+import requests
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
@@ -14,6 +15,7 @@ bootstrap = Bootstrap(app)
 load_dotenv()
 
 secret_key = os.getenv('SECRET_KEY')
+key=os.getenv('key')
 # Check for environment variable
 if not os.getenv("DATABASE_URL"):
     raise RuntimeError("DATABASE_URL is not set")
@@ -94,18 +96,31 @@ def login():
         user = db.execute(
             'SELECT * FROM users WHERE email= :email', {"email": email}).fetchone()
         if check_password_hash(user.password, password):
-            session['email'] = user.email
+            session['user_id'] = user.id
             session['username'] = user.username
+            session['logged_in']=True
             flash(f'Logged In!')
             return redirect(url_for('index'))
         else:
             flash('Incorrect password try again', 'error')
             return redirect(url_for('login'))
 
+@app.route('/book/<isbn>/')
+def book(isbn):
+    title="Book Review | Book "
+    isbn=isbn
+    book_details=requests.get('https://www.goodreads.com/book/review_counts.json', params={"key":key, "isbns":isbn})
+    results=book_details.json()
+    results=results['books']
+    book_details=db.execute('SELECT * FROM books WHERE isbn=:isbn', {"isbn": isbn})
+    print(book_details)
+    return render_template('book.html', title=title,reviews=results, book=book_details)
+    
+
 
             
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
+    session.pop('user_id', None)
     flash('logged out')
     return redirect(url_for('index'))

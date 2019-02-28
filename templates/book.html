@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content%}
+{% for book in book%}
+<h2>{{book.title}}-{{book.author}}</h2>
+<h5>Year: {{book.year}}</h5>
+{% for review in reviews%}
+<h5>Average_rating:{{review.average_rating}}</h5>
+{% endfor %}
+{% endfor %}
+{% endblock%}

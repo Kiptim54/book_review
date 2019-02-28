@@ -4,7 +4,9 @@
 {% if books %}
 {%for book in books%}
 <ul>
-    <li>{{book.title}}-{{book.author}}</li>
+    <a href="{{url_for('book', isbn=book.isbn)}}">
+    <li>{{book.title}}-{{book.author}}: {{book.isbn}}</li>
+    </a>
 </ul>
 {%endfor%}
 {%else%}

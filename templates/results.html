@@ -4,7 +4,9 @@
 {% if results %}
 {%for result in results%}
 <ul>
+    <a href="url_for('book', isbn={{result.isbn}})">
     <li>{{result.title}}~{{result.author}}</li>
+</a>
 </ul>
 
 {% endfor%}
