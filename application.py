@@ -42,12 +42,15 @@ def index():
 
 
 
+
 @app.route('/books')
 def display_books():
     title = "Books | Book Review"
     user=session['username']
     books = db.execute('SELECT * FROM books LIMIT 30').fetchall()
     return render_template('books.html', title=title, books=books, user=user)
+
+
 
 
 @app.route('/search', methods=['POST'])
@@ -58,6 +61,8 @@ def search_books():
     sql = "SELECT * FROM books WHERE title ILIKE :title"
     results = db.execute(sql, {"title": name})
     return render_template('results.html', title=title, results=results, search=name)
+
+
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -85,6 +90,7 @@ def signup():
         return redirect(url_for('login'))
 
 
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     title = "Book Reviews | Login"
@@ -105,6 +111,8 @@ def login():
             flash('Incorrect password try again', 'error')
             return redirect(url_for('login'))
 
+
+
 @app.route('/book/<isbn>/')
 def book(isbn):
     title="Book Review | Book "
@@ -122,5 +130,7 @@ def book(isbn):
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
+    session.pop('username', None)
+
     flash('logged out')
     return redirect(url_for('index'))
