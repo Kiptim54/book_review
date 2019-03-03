@@ -56,11 +56,13 @@ def display_books():
 @app.route('/search', methods=['POST'])
 def search_books():
     title = "Results | Book Review"
-    name = request.form.get('book')
+    search_term=request.form.get('search_term')
+    # name = request.form.get('book')
+    # isbn=request.form.get('isbn')
     # name="Krondor: The Betrayal"
-    sql = "SELECT * FROM books WHERE title ILIKE :title"
-    results = db.execute(sql, {"title": name})
-    return render_template('results.html', title=title, results=results, search=name)
+    sql = "SELECT * FROM books WHERE isbn=:isbn OR title ILIKE :author OR author ILIKE :author"
+    results = db.execute(sql, {"title": f"%{search_term}%", "isbn":search_term, "author":f"%{search_term}%"})
+    return render_template(f'results.html', title=title, results=results, search=search_term)
 
 
 
