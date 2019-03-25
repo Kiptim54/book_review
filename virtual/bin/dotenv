@@ -1,4 +1,4 @@
-#!/home/kiptim/Documents/cs50/book_reviews/virtual/bin/python3.6
+#!/home/kiptim/Documents/cs50/book_review/virtual/bin/python3.6
 
 # -*- coding: utf-8 -*-
 import re
