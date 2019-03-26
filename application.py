@@ -117,8 +117,10 @@ def login():
 
 @app.route('/book/<isbn>/')
 def book(isbn):
+    print("we are here")
     title="Book Review | Book "
     isbn=isbn
+    key='zhsW26th9Ckcv9tcGblKg'
     book_details=requests.get('https://www.goodreads.com/book/review_counts.json', params={"key":key, "isbns":isbn})
     results=book_details.json()
     results=results['books']
