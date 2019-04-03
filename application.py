@@ -33,12 +33,14 @@ db = scoped_session(sessionmaker(bind=engine))
 
 @app.route("/")
 def index():
-    title = "Home Page | Book Review"
+    title = "Home | Book Review"    
+    books=db.execute('SELECT * FROM books LIMIT 20').fetchall()
+    print(books)
     if 'username' in session:
         user = session['username']
-        return render_template('index.html', title=title, user=user)
-    else:
-        return render_template('index.html', title=title)
+        return render_template('index.html', title=title, user=user, books=books)
+    
+    return render_template('index.html', title=title, books=books)
 
 
 

@@ -38,3 +38,19 @@ a,  a:hover{
     background:yellow;
     color:black;
 }
+.book{
+    background:yellow;
+    height:300px;
+    width:200px;
+    margin:2%;
+    padding:2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight:bold;
+}
+.books-row{
+    display:flex;
+    justify-content: center;
+    flex-flow: row wrap;
+}
