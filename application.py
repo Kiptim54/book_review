@@ -46,9 +46,12 @@ def index():
 @app.route('/books')
 def display_books():
     title = "Books | Book Review"
-    user=session['username']
+    if 'username' in session:
+        user = session['username']
+        return render_template('books.html', title=title, books=books, user=user)
+
     books = db.execute('SELECT * FROM books LIMIT 30').fetchall()
-    return render_template('books.html', title=title, books=books, user=user)
+    return render_template('books.html', title=title, books=books)
 
 
 
@@ -120,7 +123,7 @@ def book(isbn):
     print("we are here")
     title="Book Review | Book "
     isbn=isbn
-    key='zhsW26th9Ckcv9tcGblKg'
+    key=key
     book_details=requests.get('https://www.goodreads.com/book/review_counts.json', params={"key":key, "isbns":isbn})
     results=book_details.json()
     results=results['books']

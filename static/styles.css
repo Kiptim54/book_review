@@ -1,8 +1,11 @@
 *{
     margin:0;
     padding:0;
-    color:blue;
+    display: none;
 }
 .signup_form input{
     margin-top:3%;
+}
+.custom_navbar{
+    display:flex;
 }
