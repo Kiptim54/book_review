@@ -12,13 +12,13 @@ a,  a:hover{
 }
 .custom_navbar{
     display:flex;
-    background:black;
-    color:white;
+    color:black;
+    background:white;
     padding:1%;
 }
 .custom_navbar .title{
     font-weight: bolder;
-    color:white;
+    color:black;
 }
 .first{
     margin-left: auto;
@@ -27,7 +27,7 @@ a,  a:hover{
 .custom_navbar .nav-item{
     margin-right: 2%;
     display: block;
-    color:white;
+    color:black;
 }
 .search_books_form{
     padding:2%;
@@ -38,6 +38,18 @@ a,  a:hover{
 .search_books_form .btn, .btn{
     background:yellow;
     color:black;
+}
+.search_books_form input[type=text]{
+    background:transparent;
+    border:yellow solid 2px;
+}
+.search_books_form input[type=text]:focus{
+    background:white;
+    border:yellow solid 2px;
+}
+.search_books_form input::placeholder{
+    color:white;
+
 }
 .book{
     background:yellow;
@@ -93,4 +105,19 @@ a,  a:hover{
 .contact_form_row hr{
     width: 20%;
     border: 2px solid yellow;
+}
+.search_row{
+    height: 40vh;
+    background-image:url(https://images.pexels.com/photos/1560093/pexels-photo-1560093.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940);
+    background-position: center;
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display:flex;
+    flex-flow:column;
+    justify-content: center;
+    color:white;
+    font-weight: bold;
+    align-items: center;
+    text-align: center;
 }
