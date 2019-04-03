@@ -34,8 +34,7 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 def index():
     title = "Home | Book Review"    
-    books=db.execute('SELECT * FROM books LIMIT 20').fetchall()
-    print(books)
+    books=db.execute('SELECT * FROM books LIMIT 10').fetchall()
     if 'username' in session:
         user = session['username']
         return render_template('index.html', title=title, user=user, books=books)
@@ -122,15 +121,13 @@ def login():
 
 @app.route('/book/<isbn>/')
 def book(isbn):
-    print("we are here")
     title="Book Review | Book "
     isbn=isbn
-    key=key
+    key=os.getenv('key')
     book_details=requests.get('https://www.goodreads.com/book/review_counts.json', params={"key":key, "isbns":isbn})
     results=book_details.json()
     results=results['books']
     book_details=db.execute('SELECT * FROM books WHERE isbn=:isbn', {"isbn": isbn})
-    print(book_details)
     return render_template('book.html', title=title,reviews=results, book=book_details)
     
 

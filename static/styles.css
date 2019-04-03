@@ -1,6 +1,7 @@
 *{
     margin:0;
     padding:0;
+    font-family: 'Ubuntu', sans-serif;
 }
 a,  a:hover{
     text-decoration: none;
@@ -34,7 +35,7 @@ a,  a:hover{
 .search_books_form input{
     margin:.5%;
 }
-.search_books_form .btn{
+.search_books_form .btn, .btn{
     background:yellow;
     color:black;
 }
@@ -53,4 +54,43 @@ a,  a:hover{
     display:flex;
     justify-content: center;
     flex-flow: row wrap;
+}
+.more_books_btn{
+    text-align: center;
+    width: 20%;
+    margin: auto;
+    display: block;
+    background:black;
+    color:yellow;
+    margin:2% auto;
+    
+}
+.more_books_btn:hover{
+    color:yellow;
+}
+.background_pexel{
+    height: 60vh;
+    background-image:url(https://images.pexels.com/photos/34592/pexels-photo.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940);
+    background-position: center;
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    display:flex;
+    flex-flow:column;
+    justify-content: center;
+    color:white;
+    font-weight: bold;
+    align-items: center;
+    text-align: center;
+}
+
+.contact_form_row{
+    padding:3%;
+}
+.contact_form_row h3{
+    font-weight: bolder;
+}
+.contact_form_row hr{
+    width: 20%;
+    border: 2px solid yellow;
 }
