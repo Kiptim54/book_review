@@ -1,6 +1,8 @@
 {% extends 'base.html'%}
+
+
+
 {% block content%}
-<h2>Home Page</h2>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
 <ul class=flashes>
@@ -10,20 +12,17 @@
 </ul>
 {% endif %}
 {% endwith %}
-{% if user %}
-<h5>User: {{user}}</h5>
-<a href="{{url_for('logout')}}"><button class="button">Logout</button></a>
-{% else %}
-<a href="{{url_for('login')}}"> <button class="btn"> Login in </button></a>
-{% endif %}
-<br>
-<br>
-<a href="{{url_for('display_books')}}"><button>See available books</button></a>
-<br><br>
-<form action="{{url_for('search_books')}}" method="POST">
-    <input type="text" placeholder="Title or Isbn or Author" name="search_term">
-    
-    <input type="submit" value="Search">
-</form>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+                <form action="{{url_for('search_books')}}" method="POST" class="search_books_form">
+                    <input type="text" placeholder="Title or Isbn or Author" name="search_term" class="form-control">
+                    
+                    <input type="submit" value="Search" class="btn">
+                </form>
+        </div>
+    </div>
+</div>
+
 
 {% endblock%}

@@ -1,7 +1,11 @@
 <nav class="custom_navbar">
-    <img src="" alt="logo">
-    <p>Books</p>
-    <p>Login</p>
+    <a href="{{url_for('index')}}"><h4 class="title">Book Review</h4></a>   
+    <a  class="nav-item first" href="{{url_for('display_books')}}"><h5>Books</h5></a>
+    {% if user %}
+    <a  class="nav-item" href="{{url_for('logout')}}"><h5>Logout</h5></a>
+    {% else %}
+    <a  class="nav-item" href="{{url_for('login')}}"><h5>Login</h5></a>
+    {% endif %}
 
 
 </nav>

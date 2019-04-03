@@ -1,11 +1,40 @@
 *{
     margin:0;
     padding:0;
-    display: none;
 }
+a,  a:hover{
+    text-decoration: none;
+ }
+ 
 .signup_form input{
     margin-top:3%;
 }
 .custom_navbar{
     display:flex;
+    background:black;
+    color:white;
+    padding:1%;
+}
+.custom_navbar .title{
+    font-weight: bolder;
+    color:white;
+}
+.first{
+    margin-left: auto;
+    display: block;
+}
+.custom_navbar .nav-item{
+    margin-right: 2%;
+    display: block;
+    color:white;
+}
+.search_books_form{
+    padding:2%;
+}
+.search_books_form input{
+    margin:.5%;
+}
+.search_books_form .btn{
+    background:yellow;
+    color:black;
 }
