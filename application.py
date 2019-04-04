@@ -74,7 +74,7 @@ def search_books():
     # name = request.form.get('book')
     # isbn=request.form.get('isbn')
     # name="Krondor: The Betrayal"
-    sql = "SELECT * FROM books WHERE isbn=:isbn OR title ILIKE :author OR author ILIKE :author"
+    sql = "SELECT * FROM books WHERE isbn=:isbn OR title ILIKE :title OR author ILIKE :author"
     results = db.execute(sql, {"title": f"%{search_term}%", "isbn":search_term, "author":f"%{search_term}%"})
     return render_template(f'results.html', title=title, results=results, search=search_term)
 
