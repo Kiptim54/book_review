@@ -7,10 +7,14 @@ from sqlalchemy import create_engine
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import scoped_session, sessionmaker
 import requests
+from werkzeug.contrib.cache import SimpleCache
+
+
+
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
-
+cache = SimpleCache()
 # reading defined defined variables
 load_dotenv()
 
@@ -34,7 +38,10 @@ db = scoped_session(sessionmaker(bind=engine))
 @app.route("/")
 def index():
     title = "Home | Book Review"    
-    books=db.execute('SELECT * FROM books LIMIT 10').fetchall()
+    books = cache.get('books')
+    if books is None:
+        books=db.execute('SELECT * FROM books LIMIT 10').fetchall()
+        cache.set('books', books)
     if 'username' in session:
         user = session['username']
         return render_template('index.html', title=title, user=user, books=books)
@@ -47,11 +54,14 @@ def index():
 @app.route('/books')
 def display_books():
     title = "Books | Book Review"
+    books = cache.get('books')
+    if books is None:
+        books = db.execute('SELECT * FROM books LIMIT 30').fetchall()
+        cache.set('books', books)
     if 'username' in session:
         user = session['username']
         return render_template('books.html', title=title, books=books, user=user)
 
-    books = db.execute('SELECT * FROM books LIMIT 30').fetchall()
     return render_template('books.html', title=title, books=books)
 
 
