@@ -1,16 +1,23 @@
 {% extends 'base.html' %}
 {% block content %}
-<h3>Results for the search {{search}}</h3>
 {% if results %}
-{%for result in results%}
-<ul>
-    <a href="{{ url_for('book', isbn=result.isbn)}}">
-    <li>{{result.title}}~{{result.author}} {{result.isbn}}</li>
-</a>
-</ul>
+<div class="container">
+    <div class="row">
+<h3>Results for the search "{{search}}"</h3>
 
-{% endfor%}
+      <div class="col-md-12 books-row">
+          
+        {%for result in results%}
+        <div class="book">
+          <a href="{{url_for('book', isbn=result.isbn)}}">
+            {{ result.title }} - {{result.author }}
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 {%else%}
-<h2>Nothing found</h2>
+<h2>Nothing found for the search term: {{search}}</h2>
 {% endif %}
 {% endblock %}

@@ -99,11 +99,16 @@ def signup():
             email VARCHAR NOT NULL
             );
         ''')
+        email_exists= db.execute('SELECT * FROM users WHERE email=:email', {'email':email})
+        if email_exists is not None:
+            flash('That email already exists please log in')
+            return redirect('login')
+
         db.execute('INSERT INTO users(username, password, email) VALUES(:username, :password, :email)', {
                    "username": username, "password": hashed_password, "email": email})
         db.commit()
         flash('successfully signed up. Please log in')
-        return redirect(url_for('login'))
+        return redirect('login')
 
 
 
@@ -115,17 +120,24 @@ def login():
     else:
         email = request.form.get('email')
         password = request.form.get('password')
-        user = db.execute(
-            'SELECT * FROM users WHERE email= :email', {"email": email}).fetchone()
-        if check_password_hash(user.password, password):
-            session['user_id'] = user.id
-            session['username'] = user.username
-            session['logged_in']=True
-            flash(f'Logged In!')
-            return redirect(url_for('index'))
+        # confirm email exists
+        email_exist=db.execute('SELECT * FROM users WHERE email=:email', {'email':email}).fetchone()
+        if email_exist is not None:
+            user = db.execute(
+                'SELECT * FROM users WHERE email= :email', {"email": email}).fetchone()
+            if check_password_hash(user.password, password):
+                session['user_id'] = user.id
+                session['username'] = user.username
+                session['logged_in']=True
+                flash(f'Logged In!')
+                return redirect(url_for('index'))
+            else:
+                flash('Incorrect password try again', 'error')
+                return redirect(url_for('login'))
         else:
-            flash('Incorrect password try again', 'error')
-            return redirect(url_for('login'))
+            flash('email does not exist in our systems; Please register')
+            return redirect('login')
+        
 
 
 
