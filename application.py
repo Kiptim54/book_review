@@ -141,20 +141,44 @@ def login():
 
 
 
-@app.route('/book/<isbn>/')
-def book(isbn):
+@app.route('/book/<isbn>/<book_id>/', methods=['POST', 'GET'])
+def book(isbn, book_id):
     title="Book Review | Book "
+    if 'username' in session:
+        user=session['username']
     isbn=isbn
+    book_id=book_id
     key=os.getenv('key')
     book_details=requests.get('https://www.goodreads.com/book/review_counts.json', params={"key":key, "isbns":isbn})
     results=book_details.json()
     results=results['books']
-    book_details=db.execute('SELECT * FROM books WHERE isbn=:isbn', {"isbn": isbn})
-    return render_template('book.html', title=title,reviews=results, book=book_details)
+    comments=db.execute('SELECT * FROM review WHERE book_id=:book_id', {'book_id':book_id}).fetchall()
+    print(comments)
+    book_details=db.execute('SELECT * FROM books WHERE isbn=:isbn', {"isbn": isbn}).fetchone()
+    if request.method=='POST':
+        print("hey posting comments")
+        if 'username' in session:
+            user_id=session['user_id']
+            review=request.form.get('review')
+            db.execute('''
+            CREATE TABLE IF NOT EXISTS review(
+                id SERIAL PRIMARY KEY,
+                review VARCHAR(250) NOT NULL,
+                book_id INTEGER REFERENCES books (id),
+                user_id INTEGER REFERENCES users (id)
+            );
+            ''')
+            db.execute('INSERT INTO review(review, book_id, user_id) VALUES(:review, :book_id, :user_id)', {'review':review, "book_id":book_id, "user_id":user_id})
+            db.commit()
+            flash("Review added thank you!")
+        else:
+            flash('You need to login to submit a review')
+            return redirect(url_for('login'))
+
+    return render_template('book.html', title=title,reviews=results, book=book_details, user=user, comments=comments)
     
 
 
-            
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)

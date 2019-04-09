@@ -1,10 +1,59 @@
 {% extends 'base.html' %}
 {% block content%}
-{% for book in book%}
-<h2>{{book.title}}-{{book.author}}</h2>
-<h5>Year: {{book.year}}</h5>
-{% for review in reviews%}
-<h5>Average_rating:{{review.average_rating}}</h5>
+<div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <ul class=flashes>
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endwith %}
+            </div>
+        </div>
+    </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 book-row">
+            <h1>{{book.title}}</h1>
+            <div class="book">
+                    {{ book.title }} - {{ book.author }}
+                    <br>
+                    <h5>Year: {{book.year}}</h5>
+            </div>
+            {% for review in reviews%}
+            <h5>goodreads Average_rating: {{review.average_rating}}</h5>
+           
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 comments">
+            <form method="POST" action="{{ url_for('book', isbn=book.isbn, book_id=book.id) }}">
+                <label for="review">Book Review</label>
+                    <textarea name="review" id="review" cols="30" rows="10" class="form-control">
+
+                    </textarea>
+                    <br><br>
+                <input type="submit" class="btn" value="Submit Review">
+            </form>
+        </div>
+    </div>
+</div>
 {% endfor %}
-{% endfor %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 comments-col">
+        {% for comment in comments %}
+            {{comment.review}}
+        {% endfor %}
+            
+        </div>
+    </div>
+</div>
+
 {% endblock%}

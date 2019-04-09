@@ -121,3 +121,14 @@ a,  a:hover{
     align-items: center;
     text-align: center;
 }
+
+.book-row{
+    text-align: center;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+.book-row .book{
+    height:400px;
+    width:300px;
+}
