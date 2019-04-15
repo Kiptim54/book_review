@@ -54,6 +54,7 @@ def index():
 @app.route('/books')
 def display_books():
     title = "Books | Book Review"
+    # caching books to save on time and requests sent to server
     books = cache.get('books')
     if books is None:
         books = db.execute('SELECT * FROM books LIMIT 30').fetchall()
@@ -71,9 +72,6 @@ def display_books():
 def search_books():
     title = "Results | Book Review"
     search_term=request.form.get('search_term')
-    # name = request.form.get('book')
-    # isbn=request.form.get('isbn')
-    # name="Krondor: The Betrayal"
     sql = "SELECT * FROM books WHERE isbn=:isbn OR title ILIKE :title OR author ILIKE :author"
     results = db.execute(sql, {"title": f"%{search_term}%", "isbn":search_term, "author":f"%{search_term}%"})
     return render_template(f'results.html', title=title, results=results, search=search_term)
@@ -146,6 +144,7 @@ def book(isbn, book_id):
     title="Book Review | Book "
     if 'username' in session:
         user=session['username']
+        user_id=session['user_id']
     isbn=isbn
     book_id=book_id
     key=os.getenv('key')
@@ -153,25 +152,34 @@ def book(isbn, book_id):
     results=book_details.json()
     results=results['books']
     comments=db.execute('SELECT * FROM review WHERE book_id=:book_id', {'book_id':book_id}).fetchall()
-    print(comments)
+    users_commented=[]
+    for comment in comments:
+        users_commented.append(comment.user_id)
+    
     book_details=db.execute('SELECT * FROM books WHERE isbn=:isbn', {"isbn": isbn}).fetchone()
     if request.method=='POST':
-        print("hey posting comments")
         if 'username' in session:
-            user_id=session['user_id']
+            # this ensures that a user has not alreadyreviewed the book
+            if user_id in users_commented:
+                flash('You have already given your review on this book. Only one review is allowed. Thank you')
+                return redirect(url_for('book', isbn=isbn, book_id=book_id))
             review=request.form.get('review')
             db.execute('''
             CREATE TABLE IF NOT EXISTS review(
                 id SERIAL PRIMARY KEY,
                 review VARCHAR(250) NOT NULL,
                 book_id INTEGER REFERENCES books (id),
-                user_id INTEGER REFERENCES users (id)
+                user_id INTEGER REFERENCES users (id),
+                username VARCHAR NULL
             );
             ''')
-            db.execute('INSERT INTO review(review, book_id, user_id) VALUES(:review, :book_id, :user_id)', {'review':review, "book_id":book_id, "user_id":user_id})
+            db.execute('INSERT INTO review(review, book_id, user_id, username) VALUES(:review, :book_id, :user_id, :username)', {'review':review, "book_id":book_id, "user_id":user_id, 'username':user})
             db.commit()
             flash("Review added thank you!")
+            return redirect(url_for('book', isbn=isbn, book_id=book_id))
+
         else:
+            # what to do if a user is not logged in
             flash('You need to login to submit a review')
             return redirect(url_for('login'))
 

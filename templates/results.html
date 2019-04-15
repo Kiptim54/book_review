@@ -9,7 +9,7 @@
           
         {%for result in results%}
         <div class="book">
-          <a href="{{url_for('book', isbn=result.isbn)}}">
+          <a href="{{url_for('book', isbn=result.isbn, book_id=result.id)}}">          
             {{ result.title }} - {{result.author }}
           </a>
         </div>

@@ -48,8 +48,12 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12 comments-col">
+            <h3>Reviews</h3>
+            <hr>
         {% for comment in comments %}
-            {{comment.review}}
+        <div class="comments">
+            <sub>{{comment.user}}</sub> <p>-{{comment.review}}</p>
+        </div>
         {% endfor %}
             
         </div>
