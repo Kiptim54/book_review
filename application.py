@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-from flask import Flask, session, render_template, request, redirect, flash, url_for, escape, jsonify
+from flask import Flask, session, render_template, request, redirect, flash, url_for, escape, jsonify, make_response
 from flask_bootstrap import Bootstrap
 from flask_session import Session
 from sqlalchemy import create_engine
@@ -71,10 +71,16 @@ def display_books():
 @app.route('/search', methods=['POST'])
 def search_books():
     title = "Results | Book Review"
+    if 'username' in session:
+        user=session['username']
+        user_id=session['user_id']
+    else:
+        return render_template(f'results.html', title=title, results=results, search=search_term)
+
     search_term=request.form.get('search_term')
     sql = "SELECT * FROM books WHERE isbn=:isbn OR title ILIKE :title OR author ILIKE :author"
     results = db.execute(sql, {"title": f'%{search_term}%', "isbn":search_term, "author":f'%{search_term}%'})
-    return render_template(f'results.html', title=title, results=results, search=search_term)
+    return render_template(f'results.html', title=title, results=results, search=search_term, user=user)
 
 
 
@@ -191,9 +197,25 @@ def book(isbn, book_id):
 
 @app.route('/api/book/<isbn>')
 def book_api(isbn):
-    book=db.execute('SELECT * FROM books WHERE isbn=:isbn',{'isbn':isbn})
-    print(book)
-    return jsonify({'book':[dict(row) for row in book]})
+    book=db.execute('SELECT * FROM books WHERE isbn=:isbn',{'isbn':isbn}).fetchone()
+    review_count=db.execute('SELECT COUNT(*) FROM review WHERE book_id=:book_id;', {'book_id': book.id}).fetchone()
+    book_details=requests.get('https://www.goodreads.com/book/review_counts.json', params={"key":key, "isbns":isbn})
+    results=book_details.json()
+    results=results['books'][0]
+
+    print(results)
+    if book is None:
+        return make_response(jsonify({"error":'Book does not exist'}),404)
+
+    book={
+    "title": book.title,
+    "author": book.author,
+    "year": book.year,
+    "isbn": book.isbn,
+    "review_count": review_count['count'],
+    "average_score": results['average_rating']
+}
+    return jsonify({'book':book})
 
 
 @app.route('/logout')
