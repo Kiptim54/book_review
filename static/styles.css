@@ -140,3 +140,24 @@ a,  a:hover{
     /* color:yellow; */
     font-weight: bold;
 }
+.flashes{
+    /* background: yellow; */
+    color: black;
+    position: absolute;
+    top: 3%;
+    left:50%;
+    display: flex;
+    justify-content: center;
+    padding: 3%;
+    z-index: 50;
+    width: 100%;
+
+}
+.flashes li{
+    text-decoration: none;
+    font-weight: bold;
+    background:yellow;
+    text-align: center;
+    padding: 3%;
+
+}
