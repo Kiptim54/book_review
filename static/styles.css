@@ -132,3 +132,11 @@ a,  a:hover{
     height:400px;
     width:300px;
 }
+.review{
+    background:rgb(229,229,229);
+    padding:2%;
+}
+.review span{
+    /* color:yellow; */
+    font-weight: bold;
+}

@@ -52,7 +52,10 @@
             <hr>
         {% for comment in comments %}
         <div class="comments">
-            <sub>{{comment.user}}</sub> <p>-{{comment.review}}</p>
+            <div class="review">
+                    <span>{{comment.username}} says:</span>{{comment.review}}
+                    <hr>
+            </div>
         </div>
         {% endfor %}
             

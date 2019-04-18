@@ -145,6 +145,9 @@ def book(isbn, book_id):
     if 'username' in session:
         user=session['username']
         user_id=session['user_id']
+    else:
+        flash('You will need to login to submit a review')
+        return render_template('book.html', title=title,reviews=results, book=book_details, comments=comments)
     isbn=isbn
     book_id=book_id
     key=os.getenv('key')
@@ -182,7 +185,7 @@ def book(isbn, book_id):
             # what to do if a user is not logged in
             flash('You need to login to submit a review')
             return redirect(url_for('login'))
-
+    
     return render_template('book.html', title=title,reviews=results, book=book_details, user=user, comments=comments)
     
 
