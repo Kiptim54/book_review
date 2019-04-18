@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-from flask import Flask, session, render_template, request, redirect, flash, url_for, escape
+from flask import Flask, session, render_template, request, redirect, flash, url_for, escape, jsonify
 from flask_bootstrap import Bootstrap
 from flask_session import Session
 from sqlalchemy import create_engine
@@ -73,7 +73,7 @@ def search_books():
     title = "Results | Book Review"
     search_term=request.form.get('search_term')
     sql = "SELECT * FROM books WHERE isbn=:isbn OR title ILIKE :title OR author ILIKE :author"
-    results = db.execute(sql, {"title": f"%{search_term}%", "isbn":search_term, "author":f"%{search_term}%"})
+    results = db.execute(sql, {"title": f'%{search_term}%', "isbn":search_term, "author":f'%{search_term}%'})
     return render_template(f'results.html', title=title, results=results, search=search_term)
 
 
@@ -127,7 +127,7 @@ def login():
                 session['user_id'] = user.id
                 session['username'] = user.username
                 session['logged_in']=True
-                flash(f'Logged In!')
+                flash('Logged In!')
                 return redirect(url_for('index'))
             else:
                 flash('Incorrect password try again', 'error')
@@ -185,6 +185,12 @@ def book(isbn, book_id):
 
     return render_template('book.html', title=title,reviews=results, book=book_details, user=user, comments=comments)
     
+
+@app.route('/api/book/<isbn>')
+def book_api(isbn):
+    book=db.execute('SELECT * FROM books WHERE isbn=:isbn',{'isbn':isbn})
+    print(book)
+    return jsonify({'book':[dict(row) for row in book]})
 
 
 @app.route('/logout')
