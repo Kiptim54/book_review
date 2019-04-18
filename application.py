@@ -173,6 +173,8 @@ def book(isbn, book_id):
                 flash('You have already given your review on this book. Only one review is allowed. Thank you')
                 return redirect(url_for('book', isbn=isbn, book_id=book_id))
             review=request.form.get('review')
+            rating=request.form.get('rating')
+            print(rating, 'here is the ratign')
             db.execute('''
             CREATE TABLE IF NOT EXISTS review(
                 id SERIAL PRIMARY KEY,
@@ -182,7 +184,7 @@ def book(isbn, book_id):
                 username VARCHAR NULL
             );
             ''')
-            db.execute('INSERT INTO review(review, book_id, user_id, username) VALUES(:review, :book_id, :user_id, :username)', {'review':review, "book_id":book_id, "user_id":user_id, 'username':user})
+            db.execute('INSERT INTO review(review, book_id, user_id, username, rating) VALUES(:review, :book_id, :user_id, :username, :rating)', {'review':review, "book_id":book_id, "user_id":user_id, 'username':user, 'rating':rating})
             db.commit()
             flash("Review added thank you!")
             return redirect(url_for('book', isbn=isbn, book_id=book_id))
@@ -202,8 +204,6 @@ def book_api(isbn):
     book_details=requests.get('https://www.goodreads.com/book/review_counts.json', params={"key":key, "isbns":isbn})
     results=book_details.json()
     results=results['books'][0]
-
-    print(results)
     if book is None:
         return make_response(jsonify({"error":'Book does not exist'}),404)
 
