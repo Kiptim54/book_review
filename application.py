@@ -8,14 +8,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import scoped_session, sessionmaker
 import requests
 from werkzeug.contrib.cache import SimpleCache
-
+from flask_mail import Mail, Message
 
 
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 cache = SimpleCache()
-# reading defined defined variables
+# reading defined defi
+# ned variables
 load_dotenv()
 
 secret_key = os.getenv('SECRET_KEY')
@@ -28,7 +29,19 @@ if not os.getenv("DATABASE_URL"):
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config.update(
+MAIL_SERVER = os.getenv('MAIL_SERVER'),
+MAIL_PORT = os.getenv('MAIL_PORT'),
+MAIL_USE_SSL = os.getenv('MAIL_USE_SSL'),
+MAIL_USERNAME=os.getenv('MAIL_USERNAME'),
+MAIL_PASSWORD=os.getenv('MAIL_PASSWORD'),
+MAIL_DEFAULT_SENDER=os.getenv('MAIL_DEFAULT_SENDER')
+)
+
+
+
 Session(app)
+mail = Mail(app)
 
 # Set up database
 engine = create_engine(os.getenv("DATABASE_URL"))
@@ -216,6 +229,25 @@ def book_api(isbn):
     "average_score": results['average_rating']
 }
     return jsonify({'book':book})
+
+
+@app.route('/mail', methods=['POST', 'GET'])
+def send_mail():
+    if request.method=='POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
+        msg = Message("Hello",
+                  sender="kiptim54@gmai.com",
+                  recipients=["kiptim54@gmail.com"])
+        mail.send(msg)
+        flash("Thank you for your email, we will get back to you as soon as possible")
+        return redirect(url_for('index'))
+    else:
+        print("get request")
+        return redirect(url_for('index'))
+
+
 
 
 @app.route('/logout')
